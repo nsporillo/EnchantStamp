@@ -3,12 +3,14 @@ package net.milkycraft.enchantstamp;
 import static org.bukkit.ChatColor.GOLD;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,7 +44,6 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 		this.generateLore(p, is, "Enchanted", "Enchanted");
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAnvil(InventoryClickEvent e) {
 		Inventory i = e.getInventory();
@@ -53,7 +54,7 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 			return;
 		}
 		ItemStack item = e.getCurrentItem();
-		if (item.getTypeId() == 0) {
+		if (item.getType() == Material.AIR) {
 			return;
 		}
 		if (i.getType() == InventoryType.ANVIL) {
