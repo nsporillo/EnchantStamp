@@ -1,0 +1,6 @@
+# SimpleDateFormat is a java term, to modify I suggest you google what the values stand for
+# Creative_Permission is the permission that if someone has when enchanting, they are considered to be potentially enchanted it using creative items
+# %action is either 'Enchanted' or 'Modified', %player is the player name, %date is the formatted date
+# Any questions or concerns? Report to the BukkitDev page
+SimpleDateFormat: 'EEE, d MMM yyyy HH:mm'
+Creative_Permission: 'essentials.gamemode'
