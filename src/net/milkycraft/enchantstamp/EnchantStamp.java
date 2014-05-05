@@ -36,27 +36,24 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 		this.gmperm = this.getConfig().getString("Creative_Permission");
 		this.getServer().getPluginManager().registerEvents(this, this);
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onEnchant(EnchantItemEvent e) {
+	private void onEnchant(EnchantItemEvent e) {
 		Player p = e.getEnchanter();
 		ItemStack is = e.getItem();
 		this.generateLore(p, is, "Enchanted", "Enchanted");
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onAnvil(InventoryClickEvent e) {
-		Inventory i = e.getInventory();
-		if (!(e.getWhoClicked() instanceof Player)) {
+	private void onAnvil(InventoryClickEvent e) {		
+		if (e.getSlotType() != SlotType.RESULT || !(e.getWhoClicked() instanceof Player)) {
 			return;
-		}
-		if (e.getSlotType() != SlotType.RESULT) {
-			return;
-		}
+		}		
 		ItemStack item = e.getCurrentItem();
 		if (item.getType() == Material.AIR) {
 			return;
 		}
+		Inventory i = e.getInventory();
 		if (i.getType() == InventoryType.ANVIL) {
 			Player p = (Player) e.getWhoClicked();
 			this.generateLore(p, item, "Modified", "Modified");
@@ -68,16 +65,13 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 		}
 	}
 
-	
 	private void generateLore(Player p, ItemStack item, String pre, String suff) {
 		ItemMeta im = item.getItemMeta();
 		List<String> s = new ArrayList<String>();
 		if (p.getGameMode() == GameMode.CREATIVE) {
-			s.add(RED + pre + " by " + GOLD + p.getName() + RED
-					+ " in creative");
+			s.add(RED + pre + " by " + GOLD + p.getName() + RED + " in creative");
 		} else if (p.hasPermission(this.gmperm)) {
-			s.add(RED + pre + " by " + GOLD + p.getName() + RED
-					+ " (Potentially in creative)");
+			s.add(RED + pre + " by " + GOLD + p.getName() + RED + " (Potentially in creative)");
 		} else {
 			s.add(GREEN + pre + " by " + p.getName());
 		}
