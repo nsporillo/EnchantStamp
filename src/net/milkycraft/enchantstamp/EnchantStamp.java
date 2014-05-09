@@ -40,7 +40,7 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	private void onEnchant(EnchantItemEvent e) {
 		Player p = e.getEnchanter();
-		this.generateLore(p, e.getItem(), "Enchanted", "Enchanted");
+		this.genLore(p, e.getItem(), "Enchanted", "Enchanted");
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -53,18 +53,17 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 			return;
 		}
 		Inventory i = e.getInventory();
-		if (i.getType() == InventoryType.ANVIL) {
-			Player p = (Player) e.getWhoClicked();
-			this.generateLore(p, item, "Modified", "Modified");
+		Player p = (Player) e.getWhoClicked();
+		if (i.getType() == InventoryType.ANVIL) {		
+			this.genLore(p, item, "Modified", "Modified");
 		} else if (i.getType() == InventoryType.MERCHANT) {
 			if (item.getEnchantments().size() > 0) {
-				Player p = (Player) e.getWhoClicked();
-				this.generateLore(p, item, "Traded with Villager", "Obtained");
+				this.genLore(p, item, "Traded with Villager", "Obtained");
 			}
 		}
 	}
 
-	private void generateLore(Player p, ItemStack item, String pre, String suff) {
+	private void genLore(Player p, ItemStack item, String pre, String suff) {
 		ItemMeta im = item.getItemMeta();
 		List<String> s = new ArrayList<String>();
 		if (p.getGameMode() == GameMode.CREATIVE) {
@@ -74,7 +73,7 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 		} else {
 			s.add(GREEN + pre + " by " + p.getName());
 		}
-		s.add(GOLD + suff + " on " + sdf.format(new Date()));
+		s.add(GOLD + suff + " on " + this.sdf.format(new Date()));
 		im.setLore(s);
 		item.setItemMeta(im);
 	}
