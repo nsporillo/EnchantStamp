@@ -40,8 +40,7 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	private void onEnchant(EnchantItemEvent e) {
 		Player p = e.getEnchanter();
-		ItemStack is = e.getItem();
-		this.generateLore(p, is, "Enchanted", "Enchanted");
+		this.generateLore(p, e.getItem(), "Enchanted", "Enchanted");
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
