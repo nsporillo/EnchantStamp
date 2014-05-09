@@ -63,8 +63,7 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 		}
 	}
 
-	private void genLore(Player p, ItemStack item, String pre, String suff) {
-		ItemMeta im = item.getItemMeta();
+	private void genLore(Player p, ItemStack item, String pre, String suff) {		
 		List<String> s = new ArrayList<String>();
 		if (p.getGameMode() == GameMode.CREATIVE) {
 			s.add(RED + pre + " by " + GOLD + p.getName() + RED + " in creative");
@@ -74,6 +73,7 @@ public class EnchantStamp extends JavaPlugin implements Listener {
 			s.add(GREEN + pre + " by " + p.getName());
 		}
 		s.add(GOLD + suff + " on " + this.sdf.format(new Date()));
+		ItemMeta im = item.getItemMeta();
 		im.setLore(s);
 		item.setItemMeta(im);
 	}
