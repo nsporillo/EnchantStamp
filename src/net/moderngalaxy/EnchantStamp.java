@@ -1,15 +1,7 @@
-package net.milkycraft.enchantstamp;
+package net.moderngalaxy;
 
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,54 +18,50 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class EnchantStamp extends JavaPlugin implements Listener {
 
-	private String gmperm;
-	private SimpleDateFormat sdf;
+	private Config conf;
 
 	@Override
 	public void onEnable() {
-		this.saveDefaultConfig();
-		this.sdf = new SimpleDateFormat(this.getConfig().getString("SimpleDateFormat"));
-		this.gmperm = this.getConfig().getString("Creative_Permission");
+		conf = new Config(this);
 		this.getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	private void onEnchant(EnchantItemEvent e) {
-		Player p = e.getEnchanter();
-		this.genLore(p, e.getItem(), "Enchanted", "Enchanted");
+		genLore(e.getEnchanter(), e.getItem(), conf.bindings[0], conf.bindings[1]);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	private void onAnvil(InventoryClickEvent e) {		
+	private void onAnvil(InventoryClickEvent e) {
 		if (e.getSlotType() != SlotType.RESULT || !(e.getWhoClicked() instanceof Player)) {
 			return;
-		}		
+		}
 		ItemStack item = e.getCurrentItem();
 		if (item.getType() == Material.AIR) {
 			return;
 		}
 		Inventory i = e.getInventory();
 		Player p = (Player) e.getWhoClicked();
-		if (i.getType() == InventoryType.ANVIL) {		
-			this.genLore(p, item, "Modified", "Modified");
+		if (i.getType() == InventoryType.ANVIL) {
+			this.genLore(p, item, conf.bindings[2], conf.bindings[3]);
 		} else if (i.getType() == InventoryType.MERCHANT) {
 			if (item.getEnchantments().size() > 0) {
-				this.genLore(p, item, "Traded with Villager", "Obtained");
+				this.genLore(p, item, conf.bindings[4], conf.bindings[5]);
 			}
 		}
 	}
 
-	private void genLore(Player p, ItemStack item, String pre, String suff) {		
-		List<String> s = new ArrayList<String>();
-		if (p.getGameMode() == GameMode.CREATIVE) {
-			s.add(RED + pre + " by " + GOLD + p.getName() + RED + " in creative");
-		} else if (p.hasPermission(this.gmperm)) {
-			s.add(RED + pre + " by " + GOLD + p.getName() + RED + " (Potentially in creative)");
-		} else {
-			s.add(GREEN + pre + " by " + p.getName());
-		}
-		s.add(GOLD + suff + " on " + this.sdf.format(new Date()));
+	private void genLore(Player p, ItemStack item, String pre, String suff) {
+		List<String> s = conf.processFormat(p, pre, suff);
 		ItemMeta im = item.getItemMeta();
+		if(im.hasLore()) {
+			List<String> lore = im.getLore();
+			for(int i = 0; i < lore.size(); i++) {
+				if(!conf.isStampLore(lore.get(i))){
+					s.add(lore.get(i));
+				}
+			}		
+		}
 		im.setLore(s);
 		item.setItemMeta(im);
 	}
